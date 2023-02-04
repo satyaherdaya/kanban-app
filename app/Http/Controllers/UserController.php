@@ -78,9 +78,9 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        UserSession::where($request->session()->get('user_session'))->delete();
+        UserSession::where('uuid', $request->session()->get('user_session'))->delete();
         $request->session()->forget('user_session');
-        return response('success');
+        return redirect('/login');
     }
 
     public function createUserSession(Request $request, $user)
@@ -90,8 +90,8 @@ class UserController extends Controller
         $user_session = new UserSession();
         $user_session->uuid = $request->session()->get('user_session');
         $user_session->user_id = $user->id;
-        $user_session->created_at = $time;
         $user_session->lifetime = $time->addHours(2);
+        $user_session->created_at = $time->subHours(2);
         $user_session->save();
     }
 
