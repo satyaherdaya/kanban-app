@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,15 +23,26 @@ Route::get('/', function () {
 Route::get('/register', function () {
     return view('register');
 });
+Route::post('/register/process', [UserController::class, 'register']);
 
 Route::get('/login', function () {
     return view('login');
 });
-
-Route::post('/register/process', [UserController::class, 'register']);
 Route::post('/login/process', [UserController::class, 'login']);
-Route::get('/logout', [UserController::class, 'logout']);
 
 Route::middleware('myauth')->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard']);
+    Route::get('/logout', [UserController::class, 'logout']);
+
+    Route::prefix('/category')->group(function () {
+        Route::get('/create', function () {
+            return view('create_category');
+        });
+        Route::post('/process', [CategoryController::class, 'save']);
+    });
+
+    Route::prefix('/task')->group(function () {
+        Route::get('/create/{id}', [TaskController::class, 'viewCreate']);
+        Route::post('/process', [TaskController::class, 'save']);
+    });
 });

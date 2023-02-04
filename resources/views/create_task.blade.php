@@ -11,23 +11,19 @@
 </head>
 
 <body>
-    @foreach($categories as $key => $category)
-    <div class="card">
-        <div class="card-body">
-            <p>{{ $key }}</p>
-            @foreach($category as $tasks)
-            @isset($tasks)
-            <div class="card">
-                <div class="card=body">
-                    <p>{{ $tasks->title }}</p>
-                    <p>{{ $tasks->description }}</p>
-                </div>
-            </div>
-            @endisset
-            @endforeach
+    <form action="/task/process" method="post">
+        @csrf
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" id="title">
         </div>
-    </div>
-    @endforeach
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
+        <input type="hidden" id="category_id" name="category_id" value="{{ $category->id }}">
+        <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
 </body>
 
 </html>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\UserSession;
 use Carbon\Carbon;
@@ -99,7 +100,21 @@ class UserController extends Controller
     {
         $user_session = UserSession::where('uuid', $request->session()->get('user_session'))->first();
         $categories = Category::where('user_id', $user_session->user_id)->get();
+        $tasks = Task::select('tasks.*')->join('categories', 'categories.id', '=', 'tasks.category_id')->where('tasks.user_id', $user_session->user_id)->get();
 
-        return view('dashboard', ['categories' => $categories]);
+        $categoryTask = [];
+        $i = 0;
+        foreach ($categories as $category) {
+            $categoryTask[$category->title][$i] = null;
+            foreach ($tasks as $task) {
+                if ($category->id == $task->category_id) {
+                    $categoryTask[$category->title][$i] = $task;
+                    $i++;
+                }
+            }
+            $i = 0;
+        }
+
+        return view('dashboard', ['categories' => $categoryTask]);
     }
 }
