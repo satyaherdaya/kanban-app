@@ -34,4 +34,9 @@ class User extends Model
     {
         $this->hasMany(Task::class);
     }
+
+    public function user_session()
+    {
+        $this->belongsTo(UserSession::class);
+    }
 }
