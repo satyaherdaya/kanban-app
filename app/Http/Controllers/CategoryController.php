@@ -30,7 +30,7 @@ class CategoryController extends Controller
         return redirect('/category/create');
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $valid = $request->validate(
             [
@@ -41,7 +41,7 @@ class CategoryController extends Controller
         if ($valid != null) {
             $user = UserSession::where('uuid', $request->session()->get('user_session'))->first();
 
-            $category = new Category();
+            $category = Category::find($id);
             $category->title = $valid['title'];
             $category->user_id = $user->user_id;
             $category->save();
@@ -49,7 +49,14 @@ class CategoryController extends Controller
             return redirect('/dashboard');
         }
 
-        return redirect('/category/update');
+        return redirect('/category/update/' . $id);
+    }
+
+    public function updateView($id)
+    {
+        $category = Category::find($id);
+
+        return view('update_category', ['category' => $category]);
     }
 
     public function delete($id)

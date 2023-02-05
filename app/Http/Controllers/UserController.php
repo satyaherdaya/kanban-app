@@ -86,13 +86,12 @@ class UserController extends Controller
 
     public function createUserSession(Request $request, $user)
     {
-        $time = Carbon::now()->timezone('Asia/Phnom_Penh');
         $request->session()->put('user_session', (string)Uuid::uuid4());
         $user_session = new UserSession();
         $user_session->uuid = $request->session()->get('user_session');
         $user_session->user_id = $user->id;
-        $user_session->lifetime = $time->addHours(2);
-        $user_session->created_at = $time->subHours(2);
+        $user_session->created_at = Carbon::now()->timezone('Asia/Phnom_Penh');
+        $user_session->lifetime = Carbon::now()->timezone('Asia/Phnom_Penh')->addHours(2);
         $user_session->save();
     }
 
@@ -102,19 +101,21 @@ class UserController extends Controller
         $categories = Category::where('user_id', $user_session->user_id)->get();
         $tasks = Task::select('tasks.*')->join('categories', 'categories.id', '=', 'tasks.category_id')->where('tasks.user_id', $user_session->user_id)->get();
 
-        $categoryTask = [];
-        $i = 0;
-        foreach ($categories as $category) {
-            $categoryTask[$category->title][$i] = null;
-            foreach ($tasks as $task) {
-                if ($category->id == $task->category_id) {
-                    $categoryTask[$category->title][$i] = $task;
-                    $i++;
-                }
-            }
-            $i = 0;
-        }
+        // $categoryTask = null;
+        // $i = 0;
+        // $j = 0;
+        // foreach ($categories as $category) {
+        //     $categoryTask[$i] = ['id' => $category->id, 'title' => $category->title, 'tasks' => []];
+        //     foreach ($tasks as $task) {
+        //         if ($category->id == $task->category_id) {
+        //             $categoryTask[$i]['tasks'][$j] = $task;
+        //             $j++;
+        //         }
+        //     }
+        //     $j = 0;
+        //     $i++;
+        // }
 
-        return view('dashboard', ['categories' => $categoryTask]);
+        return view('dashboard', ['categories' => $categories, 'tasks' => $tasks]);
     }
 }

@@ -32,7 +32,7 @@ class TaskController extends Controller
             return redirect('/dashboard');
         }
 
-        return redirect('/task/create');
+        return redirect('/task/create/' . $request->category_id);
     }
 
     public function viewCreate($id)
@@ -40,5 +40,38 @@ class TaskController extends Controller
         $category = Category::find($id);
 
         return view('create_task', ['category' => $category]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        if ($request->input('title') != null && $request->input('description') != null) {
+            $task = Task::find($id);
+            $task->title = $request->input('title');
+            $task->description = $request->input('description');
+            $task->save();
+
+            return redirect('/dashboard');
+        } else if ($request->input('description') == null) {
+            $task = Task::find($id);
+            $task->title = $request->input('title');
+            $task->save();
+
+            return redirect('/dashboard');
+        } else if ($request->input('title') == null) {
+            $task = Task::find($id);
+            $task->description = $request->input('description');
+            $task->save();
+
+            return redirect('/dashboard');
+        }
+
+        return redirect('/task/update/' . $id);
+    }
+
+    public function updateView($id)
+    {
+        $task = Task::find($id);
+
+        return view('update_task', ['task' => $task]);
     }
 }

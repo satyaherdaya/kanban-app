@@ -39,10 +39,16 @@ Route::middleware('myauth')->group(function () {
             return view('create_category');
         });
         Route::post('/process', [CategoryController::class, 'save']);
+
+        Route::get('/update/{id}', [CategoryController::class, 'updateView']);
+        Route::post('/update/process/{id}', [CategoryController::class, 'update']);
     });
 
     Route::prefix('/task')->group(function () {
         Route::get('/create/{id}', [TaskController::class, 'viewCreate']);
         Route::post('/process', [TaskController::class, 'save']);
+
+        Route::get('/update/{id}', [TaskController::class, 'updateView']);
+        Route::post('/update/process/{id}', [TaskController::class, 'update']);
     });
 });
