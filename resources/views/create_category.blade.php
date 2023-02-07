@@ -14,7 +14,7 @@
     <form action="/category/process" method="post">
         @csrf
         <div class="mb-3">
-            <label for="title" class="form-label"></label>
+            <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" name="title" id="title">
         </div>
         <button type="submit" class="btn btn-primary">Add Category</button>
