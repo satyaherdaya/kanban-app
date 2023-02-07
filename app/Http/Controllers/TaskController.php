@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Task;
 use App\Models\UserSession;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -73,5 +74,46 @@ class TaskController extends Controller
         $task = Task::find($id);
 
         return view('update_task', ['task' => $task]);
+    }
+
+    public function delete($id)
+    {
+        Task::where('id', $id)->delete();
+        return redirect('/dashboard');
+    }
+
+    public function updateTaskCategory(Request $request)
+    {
+        if ($request->input('next') != null) {
+            $user = UserSession::where('uuid', $request->session()->get('user_session'))->first();
+            $task = Task::find($request->input('id'));
+
+            $newTask = new Task();
+            $newTask->title = $task->title;
+            $newTask->description = $task->description;
+            $newTask->category_id = $request->input('next');
+            $newTask->user_id = $user->user_id;
+            $newTask->created_at = $task->created_at;
+            $newTask->updated_at = Carbon::now()->timezone('Asia/Phnom_Penh');
+            $newTask->save();
+
+            $task->delete();
+        } else if ($request->input('prev') != null) {
+            $user = UserSession::where('uuid', $request->session()->get('user_session'))->first();
+            $task = Task::find($request->input('id'));
+
+            $newTask = new Task();
+            $newTask->title = $task->title;
+            $newTask->description = $task->description;
+            $newTask->category_id = $request->input('prev');
+            $newTask->user_id = $user->user_id;
+            $newTask->created_at = $task->created_at;
+            $newTask->updated_at = Carbon::now()->timezone('Asia/Phnom_Penh');
+            $newTask->save();
+
+            $task->delete();
+        }
+
+        return redirect('dashboard');
     }
 }

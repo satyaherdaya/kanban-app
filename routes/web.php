@@ -42,6 +42,8 @@ Route::middleware('myauth')->group(function () {
 
         Route::get('/update/{id}', [CategoryController::class, 'updateView']);
         Route::post('/update/process/{id}', [CategoryController::class, 'update']);
+
+        Route::get('/delete/{id}', [CategoryController::class, 'delete']);
     });
 
     Route::prefix('/task')->group(function () {
@@ -50,5 +52,9 @@ Route::middleware('myauth')->group(function () {
 
         Route::get('/update/{id}', [TaskController::class, 'updateView']);
         Route::post('/update/process/{id}', [TaskController::class, 'update']);
+
+        Route::get('/delete/{id}', [TaskController::class, 'delete']);
+
+        Route::post('/update/category', [TaskController::class, 'updateTaskCategory']);
     });
 });

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_sessions', function (Blueprint $table) {
             $table->uuid()->primary();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('lifetime')->nullable();
         });

@@ -101,21 +101,29 @@ class UserController extends Controller
         $categories = Category::where('user_id', $user_session->user_id)->get();
         $tasks = Task::select('tasks.*')->join('categories', 'categories.id', '=', 'tasks.category_id')->where('tasks.user_id', $user_session->user_id)->get();
 
-        // $categoryTask = null;
-        // $i = 0;
-        // $j = 0;
-        // foreach ($categories as $category) {
-        //     $categoryTask[$i] = ['id' => $category->id, 'title' => $category->title, 'tasks' => []];
-        //     foreach ($tasks as $task) {
-        //         if ($category->id == $task->category_id) {
-        //             $categoryTask[$i]['tasks'][$j] = $task;
-        //             $j++;
-        //         }
-        //     }
-        //     $j = 0;
-        //     $i++;
-        // }
+        $categoryTask = [];
+        $i = 0;
+        $j = 0;
+        foreach ($categories as $key => $category) {
+            $categoryTask[$i] = (object)['id' => $category->id, 'title' => $category->title, 'tasks' => []];
+            foreach ($tasks as $task) {
+                if ($category->id == $task->category_id) {
+                    if ($key == 0) {
+                        $categoryTask[$i]->tasks[$j] = (object)['id' => $task->id, 'title' => $task->title, 'description' => $task->description, 'prev' => null, 'next' => $categories[$key + 1]->id];
+                        $j++;
+                    } else if ($key == sizeof($categories) - 1) {
+                        $categoryTask[$i]->tasks[$j] = (object)['id' => $task->id, 'title' => $task->title, 'description' => $task->description, 'prev' => $categories[$key - 1]->id, 'next' => null];
+                        $j++;
+                    } else {
+                        $categoryTask[$i]->tasks[$j] = (object)['id' => $task->id, 'title' => $task->title, 'description' => $task->description, 'prev' => $categories[$key - 1]->id, 'next' => $categories[$key + 1]->id];
+                        $j++;
+                    }
+                }
+            }
+            $j = 0;
+            $i++;
+        }
 
-        return view('dashboard', ['categories' => $categories, 'tasks' => $tasks]);
+        return view('dashboard', ['categoryTask' => $categoryTask]);
     }
 }
