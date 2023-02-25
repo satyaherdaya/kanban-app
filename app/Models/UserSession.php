@@ -14,7 +14,7 @@ class UserSession extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public static function remove_session()

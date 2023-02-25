@@ -27,16 +27,16 @@ class User extends Model
 
     public function category()
     {
-        $this->hasMany(Category::class);
+        return $this->hasMany(Category::class);
     }
 
     public function task()
     {
-        $this->hasMany(Task::class);
+        return $this->hasMany(Task::class);
     }
 
     public function user_session()
     {
-        $this->belongsTo(UserSession::class);
+        return $this->belongsTo(UserSession::class);
     }
 }

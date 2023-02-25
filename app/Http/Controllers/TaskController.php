@@ -85,33 +85,15 @@ class TaskController extends Controller
     public function updateTaskCategory(Request $request)
     {
         if ($request->input('next') != null) {
-            $user = UserSession::where('uuid', $request->session()->get('user_session'))->first();
             $task = Task::find($request->input('id'));
-
-            $newTask = new Task();
-            $newTask->title = $task->title;
-            $newTask->description = $task->description;
-            $newTask->category_id = $request->input('next');
-            $newTask->user_id = $user->user_id;
-            $newTask->created_at = $task->created_at;
-            $newTask->updated_at = Carbon::now()->timezone('Asia/Phnom_Penh');
-            $newTask->save();
-
-            $task->delete();
+            $task->category_id = $request->input('next');
+            $task->updated_at = Carbon::now()->timezone('Asia/Phnom_Penh');
+            $task->save();
         } else if ($request->input('prev') != null) {
-            $user = UserSession::where('uuid', $request->session()->get('user_session'))->first();
             $task = Task::find($request->input('id'));
-
-            $newTask = new Task();
-            $newTask->title = $task->title;
-            $newTask->description = $task->description;
-            $newTask->category_id = $request->input('prev');
-            $newTask->user_id = $user->user_id;
-            $newTask->created_at = $task->created_at;
-            $newTask->updated_at = Carbon::now()->timezone('Asia/Phnom_Penh');
-            $newTask->save();
-
-            $task->delete();
+            $task->category_id = $request->input('prev');
+            $task->updated_at = Carbon::now()->timezone('Asia/Phnom_Penh');
+            $task->save();
         }
 
         return redirect('dashboard');

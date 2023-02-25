@@ -15,11 +15,11 @@ class Category extends Model
 
     public function task()
     {
-        $this->hasMany(Task::class);
+        return $this->hasMany(Task::class);
     }
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 }
