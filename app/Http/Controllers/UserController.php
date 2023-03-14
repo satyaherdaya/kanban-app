@@ -63,7 +63,7 @@ class UserController extends Controller
 
         if ($valid != null) {
             $user = User::where('email', $valid['email'])->first();
-            $creds = explode(' ', $user->created_at);
+            $creds = explode(' ', $user->updated_at);
             $pass = $creds[1] . $valid['password'] . $creds[0];
             if (Hash::check($pass, $user->password)) {
                 $this->createUserSession($request, $user);
