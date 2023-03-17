@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\UserSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class CategoryController extends Controller
 {
@@ -41,7 +42,7 @@ class CategoryController extends Controller
         if ($valid != null) {
             $user = UserSession::where('uuid', $request->session()->get('user_session'))->first();
 
-            $category = Category::find($id);
+            $category = Category::find(Crypt::decryptString($id));
             $category->title = $valid['title'];
             $category->user_id = $user->user_id;
             $category->save();
@@ -49,19 +50,19 @@ class CategoryController extends Controller
             return redirect('/dashboard');
         }
 
-        return redirect('/category/update/' . $id);
+        return redirect('/category/update/' . Crypt::decryptString($id));
     }
 
     public function updateView($id)
     {
-        $category = Category::find($id);
+        $category = Category::find(Crypt::decryptString($id));
 
         return view('update_category', ['category' => $category]);
     }
 
     public function delete($id)
     {
-        Category::where('id', $id)->delete();
+        Category::where('id', Crypt::decryptString($id))->delete();
         return redirect('/dashboard');
     }
 }

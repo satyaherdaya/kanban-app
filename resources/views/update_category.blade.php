@@ -14,7 +14,7 @@
     <div class="card">
         <h5 class="card-header">Update Category</h5>
         <div class="card-body">
-            <form action="/category/update/process/{{ $category->id }}" method="post">
+            <form action="/category/update/process/{{ Illuminate\Support\Facades\Crypt::encryptString($category->id) }}" method="post">
                 @csrf
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>

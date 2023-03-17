@@ -14,7 +14,7 @@
     <div class="card">
         <h5 class="card-header">Update Task</h5>
         <div class="card-body">
-            <form action="/task/update/process/{{ $task->id }}" method="post">
+            <form action="/task/update/process/{{ Illuminate\Support\Facades\Crypt::encryptString($task->id) }}" method="post">
                 @csrf
                 <div class="mb-3">
                     <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
